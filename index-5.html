@@ -1,0 +1,1675 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>WE Gold 2026</title>
+<meta name="application-name" content="WE Gold">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="WE Gold">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#FFD700">
+<meta name="description" content="إدارة مجموعات WE Gold 2026">
+<!-- manifest injected inline via JS below -->
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@400;700;900&display=swap');
+
+  :root {
+    --gold: #FFD700;
+    --gold2: #FFA500;
+    --dark: #0a0a14;
+    --dark2: #12121f;
+    --card: #181828;
+    --border: #2a2a4a;
+    --green: #00c853;
+    --red: #ff1744;
+    --blue: #2979ff;
+    --purple: #aa00ff;
+    --text: #e8e8ff;
+    --muted: #7070a0;
+  }
+
+  /* Light mode */
+  body.light-mode {
+    --dark: #f0f2f8;
+    --dark2: #e4e8f4;
+    --card: #ffffff;
+    --border: #c8ceea;
+    --text: #1a1a3a;
+    --muted: #6a6a9a;
+  }
+  body.light-mode .header {
+    background: linear-gradient(135deg, #1a1a3e 0%, #2a2a5e 50%, #1a1a3e 100%);
+  }
+  body.light-mode .day-col-header {
+    background: linear-gradient(135deg, #2a2a5e, #1a1a3e);
+  }
+  body.light-mode .inp,
+  body.light-mode .pkg-inp,
+  body.light-mode .ci-inp,
+  body.light-mode .pkg-quick-select {
+    background: #f8f9ff;
+    color: var(--text);
+  }
+  body.light-mode .members-table th {
+    background: rgba(0,0,0,0.08);
+  }
+  body.light-mode .group-header {
+    background: linear-gradient(90deg, rgba(255,215,0,0.2), rgba(255,215,0,0.08));
+  }
+  body.light-mode .quick-bar {
+    background: #dde2f4;
+  }
+  body.light-mode .btn-outline {
+    color: var(--text);
+  }
+  body.light-mode .group-name-input {
+    color: #c8900a;
+  }
+  body.light-mode .member-row.paid { background: rgba(0,200,83,0.12); }
+  body.light-mode .member-row.unpaid { background: rgba(255,23,68,0.1); }
+
+  /* Dark/Light toggle button */
+  .theme-toggle {
+    background: rgba(255,215,0,0.15);
+    border: 1px solid rgba(255,215,0,0.35);
+    border-radius: 20px;
+    padding: 5px 11px;
+    cursor: pointer;
+    font-size: 1rem;
+    color: var(--gold);
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-family: 'Cairo', sans-serif;
+    font-weight: 700;
+    font-size: 0.72rem;
+  }
+  .theme-toggle:hover {
+    background: rgba(255,215,0,0.28);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Cairo', sans-serif;
+    background: var(--dark);
+    color: var(--text);
+    min-height: 100vh;
+    direction: rtl;
+  }
+
+  .header {
+    background: linear-gradient(135deg, #0a0a14 0%, #1a1a2e 50%, #0a0a14 100%);
+    border-bottom: 2px solid var(--gold);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 30px rgba(255,215,0,0.15);
+  }
+
+  .header h1 {
+    font-family: 'Tajawal', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: var(--gold);
+    text-shadow: 0 0 20px rgba(255,215,0,0.5);
+  }
+
+  .header-stats { display: flex; gap: 10px; font-size: 0.75rem; }
+
+  .stat-pill {
+    background: rgba(255,215,0,0.1);
+    border: 1px solid rgba(255,215,0,0.3);
+    border-radius: 20px;
+    padding: 3px 10px;
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .stat-pill .label { color: var(--muted); font-size: 0.6rem; }
+  .stat-pill .value { color: var(--gold); font-weight: 700; font-size: 0.8rem; }
+
+  .tabs { display: flex; background: var(--dark2); border-bottom: 1px solid var(--border); }
+  .tab {
+    flex: 1; padding: 12px; text-align: center; cursor: pointer;
+    font-weight: 700; font-size: 0.95rem; color: var(--muted);
+    transition: all 0.3s; border-bottom: 3px solid transparent;
+  }
+  .tab.active { color: var(--gold); border-bottom-color: var(--gold); background: rgba(255,215,0,0.05); }
+
+  /* QUICK ACTION BAR */
+  .quick-bar {
+    display: flex; gap: 8px; padding: 10px 14px;
+    background: #0e0e1e;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+
+  .summary-bar {
+    background: var(--dark2); padding: 8px 14px;
+    display: flex; gap: 8px; flex-wrap: wrap;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sum-item {
+    display: flex; flex-direction: column; align-items: center;
+    background: var(--card); border-radius: 8px; padding: 5px 10px;
+    border: 1px solid var(--border); min-width: 75px;
+  }
+  .sum-item .s-label { color: var(--muted); font-size: 0.6rem; }
+  .sum-item .s-val { font-weight: 700; font-size: 0.85rem; }
+  .sum-item.invoices .s-val { color: var(--blue); }
+  .sum-item.collected .s-val { color: var(--green); }
+  .sum-item.remaining .s-val { color: var(--red); }
+  .sum-item.profit .s-val { color: var(--gold); }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 8px 13px; border-radius: 8px; border: none;
+    cursor: pointer; font-family: 'Cairo', sans-serif;
+    font-weight: 700; font-size: 0.82rem; transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .btn-gold { background: var(--gold); color: #000; }
+  .btn-gold:hover { background: var(--gold2); }
+  .btn-green { background: var(--green); color: #000; }
+  .btn-green:hover { background: #00a844; }
+  .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+  .btn-danger { background: rgba(255,23,68,0.15); border: 1px solid var(--red); color: var(--red); }
+  .btn-danger:hover { background: var(--red); color: #fff; }
+  .btn-blue { background: var(--blue); color: #fff; }
+  .btn-blue:hover { background: #1a65ee; }
+
+  .groups-container { padding: 12px; display: flex; flex-direction: column; gap: 14px; }
+
+  .group-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; overflow: hidden;
+  }
+
+  .group-header {
+    background: linear-gradient(90deg, rgba(255,215,0,0.15), rgba(255,215,0,0.05));
+    border-bottom: 1px solid rgba(255,215,0,0.3);
+    padding: 9px 12px; display: flex; align-items: center;
+    justify-content: space-between; gap: 8px; flex-wrap: wrap;
+  }
+
+  .group-title { display: flex; align-items: center; gap: 8px; }
+
+  .group-num {
+    background: var(--gold); color: #000; border-radius: 50%;
+    width: 30px; height: 30px; display: flex; align-items: center;
+    justify-content: center; font-weight: 900; font-size: 0.85rem; flex-shrink: 0;
+  }
+
+  .group-name-input {
+    background: transparent; border: none; color: var(--gold);
+    font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 0.95rem;
+    width: 130px; outline: none; border-bottom: 1px dashed rgba(255,215,0,0.4);
+  }
+
+  .group-meta { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+
+  .meta-badge {
+    background: rgba(0,0,0,0.4); border: 1px solid var(--border);
+    border-radius: 6px; padding: 2px 8px; font-size: 0.68rem; color: var(--muted);
+  }
+  .meta-badge span { color: var(--text); font-weight: 700; }
+
+  .group-summary {
+    display: flex; gap: 5px; padding: 7px 12px;
+    background: rgba(0,0,0,0.2); border-bottom: 1px solid var(--border);
+    flex-wrap: wrap; font-size: 0.7rem;
+  }
+  .gs-item { display: flex; flex-direction: column; align-items: center; min-width: 65px; }
+  .gs-item .gl { color: var(--muted); font-size: 0.6rem; }
+  .gs-item .gv { font-weight: 700; font-size: 0.78rem; }
+  .gs-item.gi .gv { color: var(--blue); }
+  .gs-item.gc .gv { color: var(--green); }
+  .gs-item.gr .gv { color: var(--red); }
+  .gs-item.gp .gv { color: var(--gold); }
+
+  /* فاتورة الشركة */
+  .company-invoice {
+    display: flex; align-items: center; gap: 10px; padding: 6px 12px;
+    background: rgba(41,121,255,0.07); border-bottom: 1px solid var(--border);
+    font-size: 0.75rem; flex-wrap: wrap;
+  }
+  .company-invoice label { color: var(--muted); }
+  .company-invoice .ci-val { color: var(--blue); font-weight: 700; }
+  .ci-inp {
+    background: var(--dark); border: 1px solid var(--border);
+    border-radius: 6px; padding: 3px 8px; color: var(--blue);
+    font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 0.78rem;
+    width: 80px; text-align: center; outline: none;
+  }
+  .ci-inp:focus { border-color: var(--blue); }
+
+  .scroll-wrap { overflow-x: auto; }
+
+  .members-table { width: 100%; border-collapse: collapse; font-size: 0.76rem; }
+  .members-table th {
+    background: rgba(0,0,0,0.4); padding: 7px 8px; text-align: center;
+    color: var(--muted); font-weight: 600; border-bottom: 1px solid var(--border);
+    font-size: 0.67rem; white-space: nowrap;
+  }
+  .members-table td {
+    padding: 6px 6px; border-bottom: 1px solid rgba(255,255,255,0.04);
+    text-align: center; vertical-align: middle;
+  }
+  .member-row.paid { background: rgba(0,200,83,0.08); }
+  .member-row.unpaid { background: rgba(255,23,68,0.08); }
+  .member-row:hover { background: rgba(255,215,0,0.05) !important; }
+
+  .row-num { color: var(--muted); font-weight: 700; }
+
+  .inp {
+    background: transparent; border: none; border-bottom: 1px solid var(--border);
+    color: var(--text); font-family: 'Cairo', sans-serif; font-size: 0.76rem;
+    text-align: center; outline: none; width: 100%; padding: 2px 3px;
+    transition: border-color 0.2s;
+  }
+  .inp:focus { border-color: var(--gold); }
+  .inp-phone { direction: ltr; min-width: 105px; }
+  .inp-name { min-width: 75px; }
+  .inp-money { color: var(--gold); font-weight: 700; min-width: 50px; }
+  .inp-gb { color: #88ccff; min-width: 40px; }
+  .inp-min { color: #ffaa44; min-width: 45px; }
+
+  .pkg-quick-select {
+    background: var(--dark); border: 1px solid var(--border);
+    border-radius: 4px; padding: 2px 4px; color: var(--text);
+    font-family: 'Cairo', sans-serif; font-size: 0.68rem;
+    cursor: pointer; outline: none; max-width: 90px;
+  }
+  .pkg-quick-select:focus { border-color: var(--gold); }
+
+  .pay-btn {
+    width: 72px; height: 26px; border-radius: 13px; border: none;
+    cursor: pointer; font-family: 'Cairo', sans-serif; font-weight: 700;
+    font-size: 0.68rem; transition: all 0.2s;
+  }
+  .pay-btn.paid { background: var(--green); color: #000; }
+  .pay-btn.unpaid { background: var(--red); color: #fff; }
+
+  .del-group-btn {
+    background: rgba(255,23,68,0.15); border: 1px solid rgba(255,23,68,0.4);
+    color: var(--red); border-radius: 6px; padding: 3px 8px;
+    cursor: pointer; font-size: 0.68rem; font-family: 'Cairo', sans-serif;
+    transition: all 0.2s;
+  }
+  .del-group-btn:hover { background: var(--red); color: #fff; }
+
+  /* PACKAGES PAGE */
+  .pkgs-panel { padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+  .pkg-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 12px; display: flex;
+    align-items: center; gap: 10px; flex-wrap: wrap;
+  }
+  .pkg-card-num {
+    background: var(--blue); color: #fff; border-radius: 6px;
+    width: 34px; height: 34px; display: flex; align-items: center;
+    justify-content: center; font-weight: 900; flex-shrink: 0;
+  }
+  .pkg-fields { display: flex; gap: 8px; flex-wrap: wrap; flex: 1; }
+  .pkg-field { display: flex; flex-direction: column; gap: 3px; }
+  .pkg-field label { color: var(--muted); font-size: 0.65rem; }
+  .pkg-inp {
+    background: var(--dark); border: 1px solid var(--border);
+    border-radius: 6px; padding: 5px 8px; color: var(--text);
+    font-family: 'Cairo', sans-serif; font-size: 0.8rem;
+    outline: none; width: 110px; text-align: center;
+  }
+  .pkg-inp:focus { border-color: var(--gold); }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.88); z-index: 200;
+    align-items: center; justify-content: center; padding: 16px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--card); border: 1px solid var(--gold);
+    border-radius: 14px; padding: 20px; max-width: 380px; width: 100%;
+    max-height: 90vh; overflow-y: auto;
+  }
+  .modal h3 { color: var(--gold); margin-bottom: 14px; font-size: 1.05rem; }
+  .form-row { margin-bottom: 11px; }
+  .form-row label { display: block; color: var(--muted); font-size: 0.75rem; margin-bottom: 4px; }
+  .form-row input, .form-row select {
+    width: 100%; background: var(--dark); border: 1px solid var(--border);
+    border-radius: 8px; padding: 8px 10px; color: var(--text);
+    font-family: 'Cairo', sans-serif; font-size: 0.83rem; outline: none;
+  }
+  .form-row input:focus, .form-row select:focus { border-color: var(--gold); }
+  .modal-btns { display: flex; gap: 8px; margin-top: 14px; }
+
+  .page { display: none; }
+  .page.active { display: block; }
+
+  .empty-state { text-align: center; padding: 50px 20px; color: var(--muted); }
+  .empty-state .big-icon { font-size: 2.8rem; margin-bottom: 12px; }
+
+  .section-divider {
+    text-align: center; color: var(--muted); font-size: 0.72rem;
+    padding: 5px 0; border-top: 1px dashed var(--border); margin-top: 2px;
+  }
+
+  /* Search result highlight */
+  .found-highlight { animation: flashRow 1.5s ease; }
+  @keyframes flashRow {
+    0%,100% { background: transparent; }
+    30% { background: rgba(255,215,0,0.25); }
+  }
+
+  /* SEARCH MODAL */
+  .search-result-card {
+    background: var(--dark);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 10px;
+    transition: border-color 0.2s;
+  }
+  .search-result-card:hover { border-color: var(--gold); }
+  .search-result-card .src-name { font-weight: 700; font-size: 0.92rem; color: var(--text); margin-bottom: 4px; }
+  .search-result-card .src-phone { direction: ltr; display: inline-block; color: #55ddff; font-size: 0.82rem; font-weight: 700; }
+  .search-result-card .src-meta { color: var(--muted); font-size: 0.7rem; margin-top: 3px; }
+  .search-result-card .src-pkg { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+  .src-badge {
+    border-radius: 6px; padding: 2px 8px; font-size: 0.68rem; font-weight: 700;
+    border: 1px solid;
+  }
+  .src-badge.gb { background: rgba(0,180,255,0.1); border-color: rgba(0,180,255,0.35); color: #55ddff; }
+  .src-badge.min { background: rgba(255,170,68,0.1); border-color: rgba(255,170,68,0.35); color: #ffaa44; }
+  .src-badge.price { background: rgba(255,215,0,0.1); border-color: rgba(255,215,0,0.3); color: var(--gold); }
+  .src-badge.paid { background: rgba(0,200,83,0.12); border-color: rgba(0,200,83,0.35); color: var(--green); }
+  .src-badge.unpaid { background: rgba(255,23,68,0.1); border-color: rgba(255,23,68,0.35); color: var(--red); }
+  .src-badge.group { background: rgba(170,0,255,0.1); border-color: rgba(170,0,255,0.3); color: #cc88ff; }
+  .src-badge.day { background: rgba(41,121,255,0.1); border-color: rgba(41,121,255,0.3); color: #88aaff; }
+  .src-actions { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+
+  /* TWO-COLUMN LAYOUT FOR GROUPS PAGE */
+  .two-col-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    align-items: start;
+  }
+  .day-col {
+    border-left: 1px solid var(--border);
+    min-width: 0;
+  }
+  .day-col:last-child { border-left: none; }
+  .day-col-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: linear-gradient(135deg, #1a1a2e, #0a0a14);
+    border-bottom: 2px solid var(--gold);
+    padding: 10px 14px;
+    text-align: center;
+    font-family: 'Tajawal', sans-serif;
+    font-weight: 900;
+    font-size: 1rem;
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .day-col-header .col-count {
+    background: rgba(255,215,0,0.15);
+    border: 1px solid rgba(255,215,0,0.3);
+    border-radius: 12px;
+    padding: 2px 8px;
+    font-size: 0.72rem;
+    color: var(--gold);
+  }
+  .day-col-header .col-stats {
+    font-size: 0.65rem;
+    color: var(--muted);
+    font-weight: 400;
+    font-family: 'Cairo', sans-serif;
+  }
+  .day-col .groups-container { padding: 10px; }
+
+  /* جيجا badge في header المجموعة */
+  .gb-badge {
+    background: rgba(0,180,255,0.12);
+    border: 1px solid rgba(0,180,255,0.35);
+    border-radius: 6px;
+    padding: 2px 7px;
+    font-size: 0.68rem;
+    color: #55ddff;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .gb-badge.router { background: rgba(41,121,255,0.15); border-color: rgba(41,121,255,0.4); color: #88aaff; }
+
+  @media (max-width: 600px) {
+    .header-stats { display: none; }
+    .header h1 { font-size: 1rem; }
+    .two-col-layout { grid-template-columns: 1fr; }
+    .day-col { border-left: none; border-bottom: 2px solid var(--border); }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>⚡ WE Gold 2026</h1>
+  <div style="display:flex;align-items:center;gap:8px;">
+    <div class="header-stats" id="headerStats"></div>
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">🌙 ليل</button>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchDay(1)">📅 يوم 1</div>
+  <div class="tab" onclick="switchDay(16)">📅 يوم 16</div>
+  <div class="tab" onclick="switchPage('groups')">📋 المجموعات</div>
+  <div class="tab" onclick="switchPage('packages')">⚙️ الباقات</div>
+</div>
+
+<!-- QUICK ACTION BAR -->
+<div class="quick-bar" id="quickBar">
+  <button class="btn btn-gold" onclick="openAddMemberModal()">➕ إضافة عضو</button>
+  <button class="btn btn-green" onclick="openPayModal()">💰 تسجيل دفع</button>
+  <button class="btn" style="background:#9c27b0;color:#fff" onclick="openSearchModal()">🔍 بحث عضو</button>
+  <button class="btn btn-blue" onclick="openAddGroupModal()">📁 مجموعة جديدة</button>
+  <button class="btn" style="background:#229ED9;color:#fff" onclick="sendTelegramSummary()">✈️ ملخص تليجرام</button>
+  <button class="btn btn-outline" onclick="exportData()">💾 حفظ</button>
+  <button class="btn btn-outline" onclick="importData()">📂 تحميل</button>
+  <input type="file" id="importFile" accept=".json" style="display:none" onchange="doImport(event)">
+</div>
+
+<!-- TELEGRAM ALERT BANNER -->
+<div id="tgAlertBanner" style="display:none;background:#1a1000;border-bottom:2px solid #FFA500;padding:10px 16px;font-size:0.82rem;color:#ffcc44;">
+  <strong>&#9888;&#65039; تنبيه:</strong> <span id="tgAlertText"></span>
+  <button onclick="sendTelegramSummary()" style="margin-right:10px;background:#229ED9;color:#fff;border:none;border-radius:6px;padding:4px 12px;cursor:pointer;font-family:Cairo,sans-serif;font-weight:700;font-size:0.78rem;">&#9992;&#65039; إرسال تليجرام</button>
+  <button onclick="document.getElementById('tgAlertBanner').style.display='none'" style="background:transparent;border:none;color:#888;cursor:pointer;font-size:1rem;">&#10005;</button>
+</div>
+
+<div class="summary-bar" id="summaryBar"></div>
+
+<div class="page active" id="page-day1">
+  <div class="groups-container" id="groups-1"></div>
+</div>
+<div class="page" id="page-day16">
+  <div class="groups-container" id="groups-16"></div>
+</div>
+<div class="page" id="page-groups">
+  <div class="two-col-layout">
+    <div class="day-col">
+      <div class="day-col-header" id="col-header-1">📅 يوم 1</div>
+      <div class="groups-container" id="allGroups-1"></div>
+    </div>
+    <div class="day-col">
+      <div class="day-col-header" id="col-header-16">📅 يوم 16</div>
+      <div class="groups-container" id="allGroups-16"></div>
+    </div>
+  </div>
+</div>
+<div class="page" id="page-packages">
+  <div class="pkgs-panel" id="packagesPanel"></div>
+  <div style="padding:0 14px 14px">
+    <button class="btn btn-gold" onclick="addPackage()">➕ إضافة باقة</button>
+  </div>
+</div>
+
+<!-- ADD MEMBER MODAL -->
+<div class="modal-overlay" id="addMemberModal">
+  <div class="modal">
+    <h3>➕ إضافة عضو جديد</h3>
+    <div class="form-row">
+      <label>اليوم</label>
+      <select id="am_day">
+        <option value="1">يوم 1</option>
+        <option value="16">يوم 16</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label>المجموعة</label>
+      <select id="am_group"></select>
+    </div>
+    <div class="form-row">
+      <label>اسم العضو</label>
+      <input type="text" id="am_name" placeholder="الاسم الكامل" />
+    </div>
+    <div class="form-row">
+      <label>رقم التليفون</label>
+      <input type="tel" id="am_phone" placeholder="01xxxxxxxxx" style="direction:ltr" />
+    </div>
+    <div class="form-row">
+      <label>الباقة</label>
+      <select id="am_pkg" onchange="fillPkgFields()"></select>
+    </div>
+    <div class="form-row">
+      <label>الجيجا</label>
+      <input type="number" id="am_gb" placeholder="مثال: 30" />
+    </div>
+    <div class="form-row">
+      <label>الدقائق</label>
+      <input type="number" id="am_min" placeholder="مثال: 1500" />
+    </div>
+    <div class="form-row">
+      <label>السعر (جنيه)</label>
+      <input type="number" id="am_price" placeholder="مثال: 350" />
+    </div>
+    <div class="form-row">
+      <label>الحالة</label>
+      <select id="am_paid">
+        <option value="0">❌ لم يدفع بعد</option>
+        <option value="1">✅ دفع</option>
+      </select>
+    </div>
+    <div class="modal-btns">
+      <button class="btn btn-gold" onclick="confirmAddMember()">إضافة</button>
+      <button class="btn btn-outline" onclick="closeModal('addMemberModal')">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAY MODAL -->
+<div class="modal-overlay" id="payModal">
+  <div class="modal">
+    <h3>💰 تسجيل دفع سريع</h3>
+    <div class="form-row">
+      <label>ابحث بالاسم أو رقم التليفون</label>
+      <input type="text" id="pay_search" placeholder="اكتب اسم أو رقم..." oninput="searchForPay()" />
+    </div>
+    <div id="pay_results" style="max-height:300px;overflow-y:auto;margin-top:8px;display:flex;flex-direction:column;gap:6px;"></div>
+    <div class="modal-btns" style="margin-top:10px;">
+      <button class="btn btn-outline" onclick="closeModal('payModal')">إغلاق</button>
+    </div>
+  </div>
+</div>
+
+<!-- SEARCH MEMBER MODAL -->
+<div class="modal-overlay" id="searchMemberModal">
+  <div class="modal" style="max-width:440px;">
+    <h3>🔍 بحث عن عضو</h3>
+    <div class="form-row">
+      <label>ابحث بالاسم أو رقم التليفون</label>
+      <input type="text" id="sm_search" placeholder="اكتب اسم أو رقم..." oninput="doMemberSearch()" style="font-size:0.9rem;" />
+    </div>
+    <div id="sm_results" style="max-height:380px;overflow-y:auto;margin-top:6px;"></div>
+    <div class="modal-btns" style="margin-top:10px;">
+      <button class="btn btn-outline" onclick="closeModal('searchMemberModal')">إغلاق</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD GROUP MODAL -->
+<div class="modal-overlay" id="addGroupModal">
+  <div class="modal">
+    <h3>📁 مجموعة جديدة</h3>
+    <div class="form-row">
+      <label>نوع المجموعة</label>
+      <select id="ng_type" onchange="toggleRouterFields()">
+        <option value="normal">📱 عادية (6 أعضاء)</option>
+        <option value="router">📡 راوتر (6 أعضاء + راوتر)</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label>اسم المجموعة</label>
+      <input type="text" id="ng_name" placeholder="مجموعة 1" />
+    </div>
+    <div class="form-row">
+      <label>فاتورة الشركة (جنيه)</label>
+      <input type="number" id="ng_invoice" value="1700" />
+    </div>
+    <div class="form-row">
+      <label>اسم المسؤول (اختياري)</label>
+      <input type="text" id="ng_owner" placeholder="اسم المسؤول" />
+    </div>
+    <div class="form-row">
+      <label>رقم المسؤول (اختياري)</label>
+      <input type="tel" id="ng_owner_phone" placeholder="01xxxxxxxxx" style="direction:ltr" />
+    </div>
+    <!-- Router fields -->
+    <div id="routerFields" style="display:none;background:rgba(41,121,255,0.08);border:1px solid rgba(41,121,255,0.3);border-radius:8px;padding:10px;margin-bottom:10px;">
+      <div style="color:#88aaff;font-weight:700;font-size:0.82rem;margin-bottom:8px;">📡 بيانات الراوتر</div>
+      <div class="form-row">
+        <label>اسم صاحب الراوتر</label>
+        <input type="text" id="ng_router_name" placeholder="اسم صاحب الراوتر" />
+      </div>
+      <div class="form-row">
+        <label>رقم الراوتر</label>
+        <input type="tel" id="ng_router_phone" placeholder="01xxxxxxxxx" style="direction:ltr" />
+      </div>
+      <div class="form-row">
+        <label>جيجا الراوتر</label>
+        <input type="number" id="ng_router_gb" value="315" />
+      </div>
+      <div class="form-row">
+        <label>سعر الراوتر (جنيه)</label>
+        <input type="number" id="ng_router_price" value="700" />
+      </div>
+    </div>
+    <div class="modal-btns">
+      <button class="btn btn-gold" onclick="confirmAddGroup()">إضافة</button>
+      <button class="btn btn-outline" onclick="closeModal('addGroupModal')">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================
+// STATE
+// ============================
+let currentDay = 1;
+let currentPage = 'day';
+
+const DEFAULT_PACKAGES = [
+  { id: 1, name: 'الأولى',  gb: 20,  minutes: 1500, price: 280 },
+  { id: 2, name: 'الثانية', gb: 30,  minutes: 1500, price: 350 },
+  { id: 3, name: 'الثالثة', gb: 40,  minutes: 2000, price: 450 },
+  { id: 4, name: 'الرابعة', gb: 50,  minutes: 2500, price: 550 },
+  { id: 5, name: 'الخامسة', gb: 70,  minutes: 2500, price: 700 },
+  { id: 6, name: 'السادسة', gb: 100, minutes: 2500, price: 950 },
+];
+
+let data = loadData();
+
+function loadData() {
+  try {
+    const saved = localStorage.getItem('weGoldData2');
+    if (saved) return JSON.parse(saved);
+  } catch(e) {}
+  return {
+    packages: JSON.parse(JSON.stringify(DEFAULT_PACKAGES)),
+    days: { 1: { groups: [] }, 16: { groups: [] } }
+  };
+}
+
+function saveData() {
+  localStorage.setItem('weGoldData2', JSON.stringify(data));
+}
+
+// ============================
+// NAV
+// ============================
+function switchDay(day) {
+  currentDay = day;
+  currentPage = 'day';
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', (day===1&&i===0)||(day===16&&i===1)));
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-day'+(day===1?'1':'16')).classList.add('active');
+  document.getElementById('quickBar').style.display = 'flex';
+  document.getElementById('summaryBar').style.display = 'flex';
+  renderSummary();
+  renderHeaderStats();
+}
+
+function switchPage(pg) {
+  currentPage = pg;
+  document.querySelectorAll('.tab').forEach((t,i) => {
+    if (pg === 'groups')   t.classList.toggle('active', i===2);
+    if (pg === 'packages') t.classList.toggle('active', i===3);
+  });
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('quickBar').style.display = 'none';
+  document.getElementById('summaryBar').style.display = 'none';
+  if (pg === 'groups') {
+    document.getElementById('page-groups').classList.add('active');
+    document.getElementById('quickBar').style.display = 'flex';
+    document.getElementById('summaryBar').style.display = 'none';
+    renderAllGroups();
+  } else if (pg === 'packages') {
+    document.getElementById('page-packages').classList.add('active');
+    renderPackagesPanel();
+  }
+}
+
+function renderAllGroups() {
+  [1, 16].forEach(function(day) {
+    const container = document.getElementById('allGroups-' + day);
+    const groups = data.days[day].groups;
+    if (groups.length === 0) {
+      container.innerHTML = '<div class="empty-state"><div class="big-icon">📋</div><p>لا توجد مجموعات</p></div>';
+    } else {
+      container.innerHTML = groups.map(function(g, idx) { return renderGroupCard(g, day, idx); }).join('');
+    }
+    // update column header with stats
+    const stats = calcDayStats(day);
+    const header = document.getElementById('col-header-' + day);
+    header.innerHTML = '📅 يوم ' + day +
+      ' <span class="col-count">' + groups.length + ' مجموعة</span>' +
+      '<span class="col-stats"> | محصل: ' + fmt(stats.collected) + ' ج</span>';
+  });
+}
+
+// ============================
+// PACKAGES
+// ============================
+function renderPackagesPanel() {
+  const el = document.getElementById('packagesPanel');
+  el.innerHTML = data.packages.map((p,i) => `
+    <div class="pkg-card">
+      <div class="pkg-card-num">${i+1}</div>
+      <div class="pkg-fields">
+        <div class="pkg-field">
+          <label>اسم الباقة</label>
+          <input class="pkg-inp" value="${esc(p.name)}" style="width:100px" oninput="updatePkg(${p.id},'name',this.value)" />
+        </div>
+        <div class="pkg-field">
+          <label>الجيجا</label>
+          <input class="pkg-inp" type="number" value="${p.gb}" style="width:70px" oninput="updatePkg(${p.id},'gb',+this.value)" />
+        </div>
+        <div class="pkg-field">
+          <label>الدقائق</label>
+          <input class="pkg-inp" type="number" value="${p.minutes}" style="width:80px" oninput="updatePkg(${p.id},'minutes',+this.value)" />
+        </div>
+        <div class="pkg-field">
+          <label>السعر (ج)</label>
+          <input class="pkg-inp" type="number" value="${p.price}" style="width:80px" oninput="updatePkg(${p.id},'price',+this.value)" />
+        </div>
+      </div>
+      <button class="del-group-btn" onclick="deletePkg(${p.id})">🗑️</button>
+    </div>
+  `).join('');
+}
+
+function updatePkg(id, field, val) {
+  const p = data.packages.find(x => x.id===id);
+  if (p) { p[field]=val; saveData(); }
+}
+
+function deletePkg(id) {
+  if (!confirm('تأكيد حذف الباقة؟')) return;
+  data.packages = data.packages.filter(x => x.id!==id);
+  saveData(); renderPackagesPanel();
+}
+
+function addPackage() {
+  const maxId = data.packages.reduce((a,b) => Math.max(a,b.id), 0);
+  data.packages.push({ id: maxId+1, name: 'باقة جديدة', gb: 20, minutes: 1500, price: 280 });
+  saveData(); renderPackagesPanel();
+}
+
+// ============================
+// GROUPS
+// ============================
+function openAddGroupModal() {
+  document.getElementById('ng_name').value = 'مجموعة '+(data.days[currentDay].groups.length+1);
+  document.getElementById('ng_invoice').value = '1700';
+  document.getElementById('ng_owner').value = '';
+  document.getElementById('ng_owner_phone').value = '';
+  document.getElementById('ng_type').value = 'normal';
+  document.getElementById('routerFields').style.display = 'none';
+  document.getElementById('ng_router_name').value = '';
+  document.getElementById('ng_router_phone').value = '';
+  document.getElementById('ng_router_gb').value = '315';
+  document.getElementById('ng_router_price').value = '700';
+  document.getElementById('addGroupModal').classList.add('open');
+}
+
+function toggleRouterFields() {
+  const isRouter = document.getElementById('ng_type').value === 'router';
+  document.getElementById('routerFields').style.display = isRouter ? 'block' : 'none';
+}
+
+function confirmAddGroup() {
+  const name = document.getElementById('ng_name').value.trim() || 'مجموعة جديدة';
+  const companyInvoice = +document.getElementById('ng_invoice').value || 1700;
+  const ownerName = document.getElementById('ng_owner').value.trim();
+  const ownerPhone = document.getElementById('ng_owner_phone').value.trim();
+  const groupType = document.getElementById('ng_type').value;
+  const allGroups = data.days[1].groups.concat(data.days[16].groups);
+  const maxId = allGroups.reduce((a,b) => Math.max(a,b.id), 0);
+
+  const newGroup = {
+    id: maxId+1, name, companyInvoice, ownerName, ownerPhone,
+    hasRouter: groupType === 'router',
+    members: []
+  };
+
+  // if router group, add router as first member (slot 0)
+  if (groupType === 'router') {
+    const routerName  = document.getElementById('ng_router_name').value.trim() || 'راوتر';
+    const routerPhone = document.getElementById('ng_router_phone').value.trim();
+    const routerGb    = +document.getElementById('ng_router_gb').value || 315;
+    const routerPrice = +document.getElementById('ng_router_price').value || 700;
+    // check phone duplicate
+    if (routerPhone) {
+      const dup = isPhoneDuplicate(routerPhone, -1, -1);
+      if (dup) { alert('رقم الراوتر موجود بالفعل في ' + dup.groupName); return; }
+    }
+    newGroup.members.push({ name: routerName, phone: routerPhone, gb: routerGb, minutes: 0, price: routerPrice, paid: false, isRouter: true });
+  }
+
+  data.days[currentDay].groups.push(newGroup);
+  saveData();
+  closeModal('addGroupModal');
+  renderGroupsForDay(currentDay);
+  renderSummary(); renderHeaderStats();
+}
+
+function deleteGroup(groupId) {
+  if (!confirm('تأكيد حذف المجموعة؟')) return;
+  // ابحث في الأيام كلها
+  [1, 16].forEach(function(day) {
+    data.days[day].groups = data.days[day].groups.filter(g => g.id !== groupId);
+  });
+  saveData();
+  renderGroupsForDay(1); renderGroupsForDay(16);
+  if (currentPage === 'groups') renderAllGroups();
+  renderSummary(); renderHeaderStats();
+}
+
+// ============================
+// ADD MEMBER MODAL
+// ============================
+function openAddMemberModal() {
+  // populate day groups
+  populateGroupSelect(currentDay);
+  document.getElementById('am_day').value = currentDay;
+  document.getElementById('am_day').onchange = function(){ populateGroupSelect(+this.value); };
+  // populate packages
+  const pkgSel = document.getElementById('am_pkg');
+  pkgSel.innerHTML = '<option value="0">-- اختر باقة (اختياري) --</option>' +
+    data.packages.map(p => `<option value="${p.id}">${p.name} - ${p.gb}ج - ${p.price}ج</option>`).join('');
+  document.getElementById('am_name').value = '';
+  document.getElementById('am_phone').value = '';
+  document.getElementById('am_gb').value = '';
+  document.getElementById('am_min').value = '';
+  document.getElementById('am_price').value = '';
+  document.getElementById('am_paid').value = '0';
+  document.getElementById('addMemberModal').classList.add('open');
+}
+
+function populateGroupSelect(day) {
+  const sel = document.getElementById('am_group');
+  const groups = data.days[day].groups;
+  if (groups.length === 0) {
+    sel.innerHTML = '<option value="">-- لا توجد مجموعات --</option>';
+  } else {
+    sel.innerHTML = groups.map((g,i) => `<option value="${g.id}">${i+1}. ${esc(g.name)} (${g.members.length}/6)</option>`).join('');
+  }
+}
+
+function fillPkgFields() {
+  const pkgId = +document.getElementById('am_pkg').value;
+  if (!pkgId) return;
+  const pkg = data.packages.find(p => p.id===pkgId);
+  if (pkg) {
+    document.getElementById('am_gb').value = pkg.gb;
+    document.getElementById('am_min').value = pkg.minutes;
+    document.getElementById('am_price').value = pkg.price;
+  }
+}
+
+function confirmAddMember() {
+  const day = +document.getElementById('am_day').value;
+  const groupId = +document.getElementById('am_group').value;
+  const name = document.getElementById('am_name').value.trim();
+  const phone = document.getElementById('am_phone').value.trim();
+  const gb = +document.getElementById('am_gb').value || 0;
+  const minutes = +document.getElementById('am_min').value || 0;
+  const price = +document.getElementById('am_price').value || 0;
+  const paid = document.getElementById('am_paid').value === '1';
+
+  if (!groupId) { alert('اختر مجموعة أولاً'); return; }
+  if (!name && !phone) { alert('أدخل الاسم أو رقم التليفون على الأقل'); return; }
+
+  // check phone duplicate
+  if (phone) {
+    const dup = isPhoneDuplicate(phone, -1, -1);
+    if (dup) {
+      alert(`⚠️ الرقم ده موجود بالفعل!\nالاسم: ${dup.memberName}\nالمجموعة: ${dup.groupName}\nيوم ${dup.day}`);
+      return;
+    }
+  }
+
+  const g = data.days[day].groups.find(x => x.id===groupId);
+  if (!g) { alert('المجموعة غير موجودة'); return; }
+  const maxM = g.hasRouter ? 7 : 6;
+  if (g.members.length >= maxM) { alert('المجموعة ممتلئة (' + maxM + ' أعضاء)'); return; }
+
+  g.members.push({ name, phone, gb, minutes, price, paid });
+  saveData();
+  closeModal('addMemberModal');
+  renderGroupsForDay(day);
+  if (day === currentDay) { renderSummary(); renderHeaderStats(); }
+  alert(`✅ تم إضافة "${name||phone}" في ${g.name}`);
+}
+
+// ============================
+// PAY MODAL
+// ============================
+function openPayModal() {
+  document.getElementById('pay_search').value = '';
+  document.getElementById('pay_results').innerHTML = '<p style="color:var(--muted);font-size:0.8rem;text-align:center;padding:10px">اكتب للبحث...</p>';
+  document.getElementById('payModal').classList.add('open');
+  setTimeout(() => document.getElementById('pay_search').focus(), 200);
+}
+
+function searchForPay() {
+  const q = document.getElementById('pay_search').value.trim().toLowerCase();
+  const res = document.getElementById('pay_results');
+  if (q.length < 2) {
+    res.innerHTML = '<p style="color:var(--muted);font-size:0.8rem;text-align:center;padding:10px">اكتب على الأقل حرفين...</p>';
+    return;
+  }
+  let found = [];
+  [1, 16].forEach(day => {
+    data.days[day].groups.forEach((g, gi) => {
+      g.members.forEach((m, mi) => {
+        if ((m.name||'').toLowerCase().includes(q) || (m.phone||'').includes(q)) {
+          found.push({ day, gi, groupId: g.id, groupName: g.name, mi, member: m });
+        }
+      });
+    });
+  });
+
+  if (found.length === 0) {
+    res.innerHTML = '<p style="color:var(--red);font-size:0.8rem;text-align:center;padding:10px">❌ مش لاقي حد بالاسم ده</p>';
+    return;
+  }
+
+  res.innerHTML = found.map((f,idx) => `
+    <div style="background:var(--dark);border:1px solid var(--border);border-radius:8px;padding:10px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;">
+      <div style="font-size:0.78rem;">
+        <div style="font-weight:700;color:var(--text)">${esc(f.member.name||'بدون اسم')}</div>
+        <div style="color:var(--muted);font-size:0.68rem">${esc(f.member.phone||'')} | ${f.groupName} | يوم ${f.day}</div>
+        <div style="color:var(--gold);font-size:0.7rem">${f.member.price||0} ج | ${f.member.gb||0}ج | ${f.member.minutes||0}د</div>
+      </div>
+      <div style="display:flex;gap:6px;align-items:center;">
+        <span style="font-size:0.72rem;color:${f.member.paid?'var(--green)':'var(--red)'}">${f.member.paid?'✅ دفع':'❌ لم يدفع'}</span>
+        <button class="pay-btn ${f.member.paid?'paid':'unpaid'}" onclick="quickTogglePay(${f.day},${f.groupId},${f.mi},${idx})">
+          ${f.member.paid?'إلغاء الدفع':'تسجيل دفع'}
+        </button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function quickTogglePay(day, groupId, mi, resultIdx) {
+  const g = data.days[day].groups.find(x => x.id===groupId);
+  if (g && g.members[mi]) {
+    g.members[mi].paid = !g.members[mi].paid;
+    saveData();
+    renderGroupsForDay(day);
+    renderSummary(); renderHeaderStats();
+    searchForPay(); // refresh results
+  }
+}
+
+// ============================
+// RENDER GROUPS
+// ============================
+function renderGroupsForDay(day) {
+  const container = document.getElementById('groups-'+day);
+  const groups = data.days[day].groups;
+  if (groups.length === 0) {
+    container.innerHTML = `<div class="empty-state"><div class="big-icon">📋</div><p>لا توجد مجموعات<br>اضغط "مجموعة جديدة" للبدء</p></div>`;
+    return;
+  }
+  container.innerHTML = groups.map((g,i) => renderGroupCard(g, day, i)).join('');
+}
+
+function renderGroupCard(g, day, idx) {
+  const members = g.members || [];
+  const companyInv = g.companyInvoice || 1700;
+  const totalInvoice = members.reduce((s,m) => s+(m.price||0), 0);
+  const collected = members.filter(m=>m.paid).reduce((s,m) => s+(m.price||0), 0);
+  const remaining = totalInvoice - collected;
+  const profit = collected - companyInv;
+  const paidCount = members.filter(m=>m.paid).length;
+  const maxMembers = g.hasRouter ? 7 : 6;
+  const normalMembers = g.hasRouter ? members.filter(m=>!m.isRouter) : members;
+
+  // حساب الجيجا والدقائق
+  const gbNormal = g.hasRouter ? 133 : 204;
+  const gbRouter = 315;
+  const gbBadgeHtml = g.hasRouter
+    ? `<span class="gb-badge router">📡 ${gbNormal}+${gbRouter} جيجا</span>`
+    : `<span class="gb-badge">📶 ${gbNormal} جيجا</span>`;
+
+  const totalMinutes = 10000;
+  const usedGb = g.usedGb || 0;
+  const usedGbRouter = g.usedGbRouter || 0;
+  const usedMin = g.usedMin || 0;
+  const remGb = gbNormal - usedGb;
+  const remGbRouter = gbRouter - usedGbRouter;
+  const remMin = totalMinutes - usedMin;
+  const gbPct = Math.min(100, Math.round(usedGb / gbNormal * 100));
+  const gbRPct = Math.min(100, Math.round(usedGbRouter / gbRouter * 100));
+  const minPct = Math.min(100, Math.round(usedMin / totalMinutes * 100));
+  const gbColor = gbPct > 80 ? 'var(--red)' : gbPct > 50 ? '#ffaa44' : 'var(--green)';
+  const gbRColor = gbRPct > 80 ? 'var(--red)' : gbRPct > 50 ? '#ffaa44' : 'var(--green)';
+  const minColor = minPct > 80 ? 'var(--red)' : minPct > 50 ? '#ffaa44' : 'var(--green)';
+
+  const rows = members.map((m, mi) => {
+    const isRouter = m.isRouter === true;
+    const statusClass = isRouter ? (m.paid ? 'paid' : (m.phone||m.name ? 'unpaid' : '')) : (m.paid ? 'paid' : (m.phone||m.name ? 'unpaid' : ''));
+    const rowStyle = isRouter ? `background:rgba(41,121,255,${m.paid?'0.08':'0.15'});` : '';
+    const pkgOpts = data.packages.map(p => `<option value="${p.id}" ${p.price===m.price&&p.gb===m.gb?'selected':''}>${p.name}</option>`).join('');
+    return `
+      <tr class="member-row ${statusClass}" id="mr-${g.id}-${mi}" style="${rowStyle}">
+        <td class="row-num">${isRouter ? '📡' : mi + (g.hasRouter ? 0 : 1)}</td>
+        <td><input class="inp inp-name" value="${esc(m.name)}" placeholder="${isRouter?'اسم الراوتر':'الاسم'}" oninput="updateMember(${g.id},${mi},'name',this.value,${day})" /></td>
+        <td><input class="inp inp-phone" value="${esc(m.phone)}" placeholder="01xxxxxxxxx" oninput="updateMember(${g.id},${mi},'phone',this.value,${day})" /></td>
+        <td>
+          ${isRouter ? '<span style="color:#88aaff;font-size:0.7rem">راوتر</span>' : `
+          <select class="pkg-quick-select" onchange="applyPkgToMember(${g.id},${mi},+this.value,${day})">
+            <option value="0">-- --</option>
+            ${pkgOpts}
+          </select>`}
+        </td>
+        <td><input class="inp inp-gb" type="number" value="${m.gb||''}" placeholder="0" oninput="updateMember(${g.id},${mi},'gb',+this.value,${day})" style="${isRouter?'color:#88aaff;':''}" /></td>
+        <td><input class="inp inp-min" type="number" value="${m.minutes||''}" placeholder="0" oninput="updateMember(${g.id},${mi},'minutes',+this.value,${day})" /></td>
+        <td><input class="inp inp-money" type="number" value="${m.price||''}" placeholder="0" oninput="updateMember(${g.id},${mi},'price',+this.value,${day})" /></td>
+        <td>
+          <button class="pay-btn ${m.paid?'paid':'unpaid'}" onclick="togglePaid(${g.id},${mi},${day})" style="${isRouter?'background:rgba(41,121,255,0.5);border:1px solid #88aaff;':''}">
+            ${m.paid?'✅ دفع':'❌ لا'}
+          </button>
+        </td>
+        <td>
+          <button onclick="removeMember(${g.id},${mi},${day})" style="background:transparent;border:none;color:#ff4466;cursor:pointer;font-size:0.9rem;">🗑</button>
+        </td>
+      </tr>
+    `;
+  }).join('');
+
+  return `
+    <div class="group-card" id="gc-${g.id}">
+      <div class="group-header">
+        <div class="group-title">
+          <div class="group-num">${idx+1}</div>
+          <input class="group-name-input" value="${esc(g.name)}" oninput="updateGroupField(${g.id},'name',this.value,${day})" />
+        </div>
+        <div class="group-meta">
+          ${g.ownerName ? `<span style="font-size:0.68rem;color:#cc88ff">👤 ${esc(g.ownerName)}${g.ownerPhone?' | '+esc(g.ownerPhone):''}</span>` : ''}
+          ${gbBadgeHtml}
+          ${g.hasRouter ? '<span class="meta-badge" style="color:#88aaff;border-color:rgba(41,121,255,0.4)">📡 راوتر</span>' : ''}
+          <span class="meta-badge">${paidCount}/${normalMembers.length} دفعوا</span>
+          <button class="del-group-btn" onclick="deleteGroup(${g.id})">🗑️ حذف</button>
+        </div>
+      </div>
+
+      <div class="group-summary">
+        <div class="gs-item gi"><div class="gl">إجمالي الفواتير</div><div class="gv">${fmt(totalInvoice)} ج</div></div>
+        <div class="gs-item gc"><div class="gl">المحصل</div><div class="gv">${fmt(collected)} ج</div></div>
+        <div class="gs-item gr"><div class="gl">المتبقي</div><div class="gv">${fmt(remaining)} ج</div></div>
+        <div class="gs-item gp"><div class="gl">الأرباح</div><div class="gv">${fmt(profit)} ج</div></div>
+      </div>
+
+      <!-- استهلاك الجيجا والدقائق -->
+      <div style="padding:8px 12px;background:rgba(0,0,0,0.25);border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:7px;">
+        
+        <!-- جيجا المجموعة -->
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <span style="color:var(--muted);font-size:0.68rem;min-width:90px;">📶 جيجا (${gbNormal})</span>
+          <input type="number" value="${usedGb}" min="0" max="${gbNormal}"
+            style="width:60px;background:var(--dark);border:1px solid var(--border);border-radius:6px;padding:3px 6px;color:#55ddff;font-family:Cairo,sans-serif;font-size:0.75rem;text-align:center;outline:none;"
+            oninput="updateGroupField(${g.id},'usedGb',+this.value,${day})"
+            placeholder="0" />
+          <div style="flex:1;min-width:80px;background:rgba(255,255,255,0.08);border-radius:10px;height:8px;overflow:hidden;">
+            <div style="width:${gbPct}%;height:100%;background:${gbColor};border-radius:10px;transition:width 0.3s;"></div>
+          </div>
+          <span style="font-size:0.7rem;color:${gbColor};min-width:55px;text-align:left;">متبقي: ${remGb}ج</span>
+        </div>
+
+        ${g.hasRouter ? `
+        <!-- جيجا الراوتر -->
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <span style="color:var(--muted);font-size:0.68rem;min-width:90px;">📡 راوتر (${gbRouter})</span>
+          <input type="number" value="${usedGbRouter}" min="0" max="${gbRouter}"
+            style="width:60px;background:var(--dark);border:1px solid var(--border);border-radius:6px;padding:3px 6px;color:#88aaff;font-family:Cairo,sans-serif;font-size:0.75rem;text-align:center;outline:none;"
+            oninput="updateGroupField(${g.id},'usedGbRouter',+this.value,${day})"
+            placeholder="0" />
+          <div style="flex:1;min-width:80px;background:rgba(255,255,255,0.08);border-radius:10px;height:8px;overflow:hidden;">
+            <div style="width:${gbRPct}%;height:100%;background:${gbRColor};border-radius:10px;transition:width 0.3s;"></div>
+          </div>
+          <span style="font-size:0.7rem;color:${gbRColor};min-width:55px;text-align:left;">متبقي: ${remGbRouter}ج</span>
+        </div>
+        ` : ''}
+
+        <!-- الدقائق -->
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <span style="color:var(--muted);font-size:0.68rem;min-width:90px;">⏱️ دقائق (10,000)</span>
+          <input type="number" value="${usedMin}" min="0" max="10000"
+            style="width:60px;background:var(--dark);border:1px solid var(--border);border-radius:6px;padding:3px 6px;color:#ffaa44;font-family:Cairo,sans-serif;font-size:0.75rem;text-align:center;outline:none;"
+            oninput="updateGroupField(${g.id},'usedMin',+this.value,${day})"
+            placeholder="0" />
+          <div style="flex:1;min-width:80px;background:rgba(255,255,255,0.08);border-radius:10px;height:8px;overflow:hidden;">
+            <div style="width:${minPct}%;height:100%;background:${minColor};border-radius:10px;transition:width 0.3s;"></div>
+          </div>
+          <span style="font-size:0.7rem;color:${minColor};min-width:55px;text-align:left;">متبقي: ${remMin}</span>
+        </div>
+
+      </div>
+
+      <div class="company-invoice">
+        <label>فاتورة الشركة:</label>
+        <input class="ci-inp" type="number" value="${companyInv}" oninput="updateGroupField(${g.id},'companyInvoice',+this.value,${day})" />
+        <span class="ci-val">ج</span>
+        <span style="color:var(--muted);font-size:0.68rem">| الأرباح = المحصل - فاتورة الشركة</span>
+      </div>
+
+      <div class="scroll-wrap">
+        <table class="members-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>الاسم</th>
+              <th>رقم الهاتف</th>
+              <th>الباقة</th>
+              <th>جيجا</th>
+              <th>دقائق</th>
+              <th>السعر (ج)</th>
+              <th>الحالة</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="tbody-${g.id}">
+            ${rows}
+          </tbody>
+        </table>
+      </div>
+
+      ${members.length < 6 ? `
+        <div style="padding:7px 12px;">
+          <button class="btn btn-outline" style="font-size:0.72rem;padding:4px 10px" onclick="addEmptyMember(${g.id},${day})">➕ إضافة عضو للمجموعة</button>
+        </div>
+      ` : `<div class="section-divider">المجموعة مكتملة (6 أعضاء)</div>`}
+    </div>
+  `;
+}
+
+function applyPkgToMember(groupId, mi, pkgId, day) {
+  if (!pkgId) return;
+  const pkg = data.packages.find(p => p.id===pkgId);
+  const g = data.days[day].groups.find(x => x.id===groupId);
+  if (g && g.members[mi] && pkg) {
+    g.members[mi].gb = pkg.gb;
+    g.members[mi].minutes = pkg.minutes;
+    g.members[mi].price = pkg.price;
+    saveData();
+    renderGroupsForDay(day);
+    renderSummary(); renderHeaderStats();
+  }
+}
+
+function updateGroupField(groupId, field, val, day) {
+  const g = data.days[day].groups.find(x => x.id===groupId);
+  if (g) { g[field]=val; saveData(); renderSummary(); renderHeaderStats(); }
+}
+
+function isPhoneDuplicate(phone, excludeGroupId, excludeMi) {
+  if (!phone || phone.trim() === '') return null;
+  phone = phone.trim();
+  for (const day of [1, 16]) {
+    for (const g of data.days[day].groups) {
+      for (let i = 0; i < g.members.length; i++) {
+        if (g.id === excludeGroupId && i === excludeMi) continue;
+        if ((g.members[i].phone || '').trim() === phone) {
+          return { groupName: g.name, memberName: g.members[i].name || 'بدون اسم', day };
+        }
+      }
+    }
+  }
+  return null;
+}
+
+function updateMember(groupId, mi, field, val, day) {
+  const g = data.days[day].groups.find(x => x.id===groupId);
+  if (g && g.members[mi]) {
+    // check phone duplicate
+    if (field === 'phone' && val.trim() !== '') {
+      const dup = isPhoneDuplicate(val, groupId, mi);
+      if (dup) {
+        alert(`⚠️ الرقم ده موجود بالفعل!\nالاسم: ${dup.memberName}\nالمجموعة: ${dup.groupName}\nيوم ${dup.day}`);
+        // reset the input to old value
+        const row = document.getElementById('mr-'+groupId+'-'+mi);
+        if (row) {
+          const inp = row.querySelector('.inp-phone');
+          if (inp) inp.value = g.members[mi].phone || '';
+        }
+        return;
+      }
+    }
+    g.members[mi][field] = val;
+    saveData();
+    // update row color
+    const row = document.getElementById('mr-'+groupId+'-'+mi);
+    if (row) {
+      const m = g.members[mi];
+      row.classList.remove('paid','unpaid');
+      if (m.paid) row.classList.add('paid');
+      else if (m.name||m.phone) row.classList.add('unpaid');
+    }
+    renderSummary(); renderHeaderStats();
+  }
+}
+
+function togglePaid(groupId, mi, day) {
+  const g = data.days[day].groups.find(x => x.id===groupId);
+  if (g && g.members[mi]) {
+    g.members[mi].paid = !g.members[mi].paid;
+    saveData();
+    renderGroupsForDay(day);
+    if (currentPage === 'groups') renderAllGroups();
+    renderSummary(); renderHeaderStats();
+  }
+}
+
+function addEmptyMember(groupId, day) {
+  const g = data.days[day].groups.find(x => x.id===groupId);
+  const max = g && g.hasRouter ? 7 : 6;
+  if (g && g.members.length < max) {
+    g.members.push({ name:'', phone:'', gb:0, minutes:0, price:0, paid:false, isRouter:false });
+    saveData();
+    renderGroupsForDay(day);
+  }
+}
+
+function removeMember(groupId, mi, day) {
+  const g = data.days[day].groups.find(x => x.id===groupId);
+  if (g) {
+    g.members.splice(mi, 1);
+    saveData();
+    renderGroupsForDay(day);
+    renderSummary(); renderHeaderStats();
+  }
+}
+
+// ============================
+// SUMMARY
+// ============================
+function calcDayStats(day) {
+  let invoices=0, collected=0, companyTotal=0;
+  data.days[day].groups.forEach(g => {
+    const ci = g.companyInvoice||1700;
+    const paidMembers = (g.members||[]).filter(m=>m.paid);
+    const allInvoice = (g.members||[]).reduce((s,m)=>s+(m.price||0),0);
+    const col = paidMembers.reduce((s,m)=>s+(m.price||0),0);
+    invoices += allInvoice;
+    collected += col;
+    if (paidMembers.length > 0) companyTotal += ci;
+  });
+  return { invoices, collected, remaining: invoices-collected, profit: collected-companyTotal };
+}
+
+function renderSummary() {
+  if (currentPage!=='day') { document.getElementById('summaryBar').innerHTML=''; return; }
+  const cur = calcDayStats(currentDay);
+  const d1 = calcDayStats(1);
+  const d16 = calcDayStats(16);
+  const totCol = d1.collected + d16.collected;
+  const totPro = d1.profit + d16.profit;
+  // فاتورة الشركة الإجمالية = 1700 × عدد المجموعات في اليوم الحالي
+  const curGroupCount = data.days[currentDay].groups.length;
+  const companyInvoiceTotal = 1700 * curGroupCount;
+  document.getElementById('summaryBar').innerHTML = `
+    <div class="sum-item invoices"><div class="s-label">إجمالي الفواتير</div><div class="s-val">${fmt(cur.invoices)} ج</div></div>
+    <div class="sum-item collected"><div class="s-label">المحصل</div><div class="s-val">${fmt(cur.collected)} ج</div></div>
+    <div class="sum-item remaining"><div class="s-label">المتبقي</div><div class="s-val">${fmt(cur.remaining)} ج</div></div>
+    <div class="sum-item profit"><div class="s-label">الأرباح</div><div class="s-val">${fmt(cur.profit)} ج</div></div>
+    <div class="sum-item" style="border-color:rgba(41,121,255,0.4)"><div class="s-label">فاتورة الشركة (${curGroupCount}×1700)</div><div class="s-val" style="color:var(--blue)">${fmt(companyInvoiceTotal)} ج</div></div>
+    <div class="sum-item" style="border-color:rgba(255,215,0,0.3)"><div class="s-label">إجمالي الكل</div><div class="s-val" style="color:var(--gold)">${fmt(totCol)} ج</div></div>
+    <div class="sum-item" style="border-color:rgba(255,215,0,0.3)"><div class="s-label">أرباح الكل</div><div class="s-val" style="color:var(--gold)">${fmt(totPro)} ج</div></div>
+  `;
+}
+
+function renderHeaderStats() {
+  const d1=calcDayStats(1), d16=calcDayStats(16);
+  const totalGroups = data.days[1].groups.length + data.days[16].groups.length;
+  document.getElementById('headerStats').innerHTML = `
+    <div class="stat-pill"><div class="label">المجموعات</div><div class="value">${totalGroups}</div></div>
+    <div class="stat-pill"><div class="label">إجمالي محصل</div><div class="value">${fmt(d1.collected+d16.collected)} ج</div></div>
+    <div class="stat-pill"><div class="label">الأرباح</div><div class="value">${fmt(d1.profit+d16.profit)} ج</div></div>
+  `;
+}
+
+// ============================
+// MODAL
+// ============================
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if (e.target===m) m.classList.remove('open'); });
+});
+
+// ============================
+// IMPORT / EXPORT
+// ============================
+function exportData() {
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'we-gold-data.json';
+  a.click();
+}
+function importData() { document.getElementById('importFile').click(); }
+function doImport(e) {
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const imported = JSON.parse(ev.target.result);
+      if (imported.packages && imported.days) {
+        data = imported; saveData();
+        renderGroupsForDay(1); renderGroupsForDay(16);
+        renderSummary(); renderHeaderStats();
+        alert('تم تحميل البيانات بنجاح ✅');
+      } else { alert('ملف غير صحيح ❌'); }
+    } catch { alert('خطأ في قراءة الملف ❌'); }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+// ============================
+// SEARCH MEMBER MODAL
+// ============================
+function openSearchModal() {
+  document.getElementById('sm_search').value = '';
+  document.getElementById('sm_results').innerHTML = '<p style="color:var(--muted);font-size:0.82rem;text-align:center;padding:16px">اكتب على الأقل حرفين للبحث...</p>';
+  document.getElementById('searchMemberModal').classList.add('open');
+  setTimeout(() => document.getElementById('sm_search').focus(), 200);
+}
+
+function doMemberSearch() {
+  const q = document.getElementById('sm_search').value.trim().toLowerCase();
+  const res = document.getElementById('sm_results');
+  if (q.length < 2) {
+    res.innerHTML = '<p style="color:var(--muted);font-size:0.82rem;text-align:center;padding:16px">اكتب على الأقل حرفين...</p>';
+    return;
+  }
+  let found = [];
+  [1, 16].forEach(day => {
+    data.days[day].groups.forEach((g) => {
+      g.members.forEach((m, mi) => {
+        if ((m.name||'').toLowerCase().includes(q) || (m.phone||'').includes(q)) {
+          found.push({ day, groupId: g.id, groupName: g.name, mi, member: m });
+        }
+      });
+    });
+  });
+
+  if (found.length === 0) {
+    res.innerHTML = '<p style="color:var(--red);font-size:0.82rem;text-align:center;padding:16px">❌ مش لاقي أي عضو</p>';
+    return;
+  }
+
+  res.innerHTML = found.map((f, idx) => {
+    const m = f.member;
+    const pkgName = data.packages.find(p => p.gb === m.gb && p.price === m.price)?.name || '--';
+    return `
+      <div class="search-result-card">
+        <div class="src-name">${esc(m.name || 'بدون اسم')}</div>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:3px;">
+          ${m.phone ? `<span class="src-phone">📞 ${esc(m.phone)}</span>` : ''}
+          <span class="src-badge day">📅 يوم ${f.day}</span>
+          <span class="src-badge group">📋 ${esc(f.groupName)}</span>
+        </div>
+        <div class="src-pkg">
+          ${m.gb ? `<span class="src-badge gb">📶 ${m.gb} جيجا</span>` : ''}
+          ${m.minutes ? `<span class="src-badge min">⏱️ ${m.minutes} دقيقة</span>` : ''}
+          ${m.price ? `<span class="src-badge price">💰 ${m.price} ج</span>` : ''}
+          <span class="src-badge ${m.paid ? 'paid' : 'unpaid'}">${m.paid ? '✅ دفع' : '❌ لم يدفع'}</span>
+          ${pkgName !== '--' ? `<span class="src-badge group">📦 ${esc(pkgName)}</span>` : ''}
+        </div>
+        <div class="src-actions">
+          <button class="pay-btn ${m.paid ? 'paid' : 'unpaid'}" style="width:auto;padding:0 12px;"
+            onclick="smTogglePay(${f.day},${f.groupId},${f.mi})">
+            ${m.paid ? '↩️ إلغاء الدفع' : '✅ تسجيل دفع'}
+          </button>
+          <button class="btn" style="background:#229ED9;color:#fff;font-size:0.72rem;padding:4px 10px;"
+            onclick="smSendTelegram(${idx}, ${JSON.stringify(f).replace(/"/g,'&quot;')})">
+            ✈️ إرسال تليجرام
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function smTogglePay(day, groupId, mi) {
+  const g = data.days[day].groups.find(x => x.id === groupId);
+  if (g && g.members[mi] !== undefined) {
+    g.members[mi].paid = !g.members[mi].paid;
+    saveData();
+    renderGroupsForDay(day);
+    renderSummary(); renderHeaderStats();
+    doMemberSearch(); // refresh
+  }
+}
+
+async function smSendTelegram(idx, fRaw) {
+  // fRaw may be passed as string from onclick attribute, handle both
+  let f;
+  try { f = typeof fRaw === 'string' ? JSON.parse(fRaw) : fRaw; } catch(e) { return; }
+  // get fresh member data
+  const g = data.days[f.day].groups.find(x => x.id === f.groupId);
+  if (!g) return;
+  const m = g.members[f.mi];
+  if (!m) return;
+  const pkgName = data.packages.find(p => p.gb === m.gb && p.price === m.price)?.name || '--';
+  const msg =
+`⚡ <b>WE Gold - بيانات عضو</b>
+
+👤 الاسم: ${m.name || 'بدون اسم'}
+📞 الرقم: ${m.phone || 'غير مسجل'}
+📋 المجموعة: ${g.name}
+📅 اليوم: يوم ${f.day}
+📦 الباقة: ${pkgName}
+📶 الجيجا: ${m.gb || 0} جيجا
+⏱️ الدقائق: ${m.minutes || 0} دقيقة
+💰 السعر: ${m.price || 0} جنيه
+${m.paid ? '✅ الحالة: دفع' : '❌ الحالة: لم يدفع بعد'}`;
+
+  const ok = await sendTelegramMsg(msg);
+  if (ok) {
+    alert('✅ تم إرسال بيانات العضو على تليجرام!');
+  } else {
+    alert('❌ فشل الإرسال');
+  }
+}
+
+// ============================
+// HELPERS
+// ============================
+function esc(s) {
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function fmt(n) { return Number(n||0).toLocaleString('ar-EG'); }
+
+
+// ============================
+// TELEGRAM
+// ============================
+const TG_TOKEN = '8891974703:AAGz90JNt3hMGWWlrIQFtA5CHL4-XTHfT3o';
+const TG_CHAT  = '938489524';
+const ALERT_DAYS = 3;
+
+async function sendTelegramMsg(text) {
+  // Method 1: fetch with no-cors workaround using form encoding
+  try {
+    const params = new URLSearchParams();
+    params.append('chat_id', TG_CHAT);
+    params.append('text', text);
+    params.append('parse_mode', 'HTML');
+    const res = await fetch('https://api.telegram.org/bot' + TG_TOKEN + '/sendMessage', {
+      method: 'POST',
+      body: params
+    });
+    const json = await res.json();
+    return json.ok;
+  } catch(e) {
+    // Method 2: fallback - open in browser
+    const encoded = encodeURIComponent(text.replace(/<[^>]+>/g, ''));
+    window.open('https://api.telegram.org/bot' + TG_TOKEN + '/sendMessage?chat_id=' + TG_CHAT + '&text=' + encoded, '_blank');
+    return true;
+  }
+}
+
+function buildSummaryText() {
+  const d1 = calcDayStats(1);
+  const d16 = calcDayStats(16);
+  const now = new Date().toLocaleDateString('ar-EG');
+  let msg = '⚡ <b>WE Gold - ملخص محفوظ</b>\n📅 ' + now + '\n\n';
+
+  [1, 16].forEach(function(day) {
+    const groups = data.days[day].groups;
+    if (groups.length === 0) return;
+    const stats = calcDayStats(day);
+    msg += '📅 <b>يوم ' + day + '</b>\n';
+    msg += '📊 المجموعات: ' + groups.length + ' | المحصل: ' + stats.collected + ' ج | الأرباح: ' + stats.profit + ' ج\n';
+    groups.forEach(function(g) {
+      const unpaid = (g.members||[]).filter(function(m){ return !m.paid && (m.name||m.phone); });
+      const paid   = (g.members||[]).filter(function(m){ return m.paid; });
+      msg += '\n  📋 ' + g.name + ':\n';
+      msg += '    ✅ دفعوا: ' + paid.length + ' | ❌ لم يدفعوا: ' + unpaid.length + '\n';
+      unpaid.forEach(function(m){
+        msg += '    • ' + (m.name||'بدون اسم') + (m.phone?' ('+m.phone+')':'') + ' - ' + (m.price||0) + ' ج\n';
+      });
+    });
+    msg += '\n';
+  });
+
+  const totalC = d1.collected + d16.collected;
+  const totalP = d1.profit + d16.profit;
+  const totalR = d1.remaining + d16.remaining;
+  msg += '💰 <b>إجمالي الكل:</b>\nالمحصل: ' + totalC + ' ج | الأرباح: ' + totalP + ' ج | المتبقي: ' + totalR + ' ج';
+  return msg;
+}
+
+function buildUnpaidLines() {
+  var lines = [];
+  [1, 16].forEach(function(day) {
+    data.days[day].groups.forEach(function(g) {
+      var unpaid = (g.members||[]).filter(function(m){ return !m.paid && (m.name||m.phone); });
+      if (unpaid.length > 0) lines.push(g.name + ' (يوم ' + day + '): ' + unpaid.length + ' لم يدفعوا');
+    });
+  });
+  return lines;
+}
+
+async function sendTelegramSummary() {
+  const btn = event.currentTarget;
+  const origText = btn.textContent;
+  btn.textContent = '⏳ جاري الإرسال...';
+  btn.disabled = true;
+  const msg = buildSummaryText();
+  const ok = await sendTelegramMsg(msg);
+  btn.disabled = false;
+  if (ok) {
+    btn.textContent = '✅ تم الإرسال!';
+    localStorage.setItem('lastTgSend', Date.now().toString());
+    setTimeout(function(){ btn.textContent = origText; }, 3000);
+  } else {
+    btn.textContent = '❌ فشل';
+    setTimeout(function(){ btn.textContent = origText; }, 3000);
+  }
+}
+
+async function checkAndAutoSend() {
+  const last = parseInt(localStorage.getItem('lastTgSend') || '0');
+  const diffDays = (Date.now() - last) / (1000 * 60 * 60 * 24);
+
+  // show unpaid banner
+  const lines = buildUnpaidLines();
+  if (lines.length > 0) {
+    const banner = document.getElementById('tgAlertBanner');
+    const txt    = document.getElementById('tgAlertText');
+    txt.textContent = lines.join(' | ');
+    banner.style.display = 'flex';
+    banner.style.alignItems = 'center';
+    banner.style.gap = '8px';
+    banner.style.flexWrap = 'wrap';
+  }
+
+  // auto send after ALERT_DAYS
+  if (diffDays >= ALERT_DAYS && (data.days[1].groups.length + data.days[16].groups.length) > 0) {
+    const fullMsg = '⏰ <b>تنبيه تلقائي - WE Gold</b>\n\n' + buildSummaryText();
+    const ok = await sendTelegramMsg(fullMsg);
+    if (ok) localStorage.setItem('lastTgSend', Date.now().toString());
+  }
+}
+
+// ============================
+// DARK / LIGHT MODE
+// ============================
+function toggleTheme() {
+  const isLight = document.body.classList.toggle('light-mode');
+  const btn = document.getElementById('themeToggle');
+  btn.textContent = isLight ? '☀️ نهار' : '🌙 ليل';
+  localStorage.setItem('weGoldTheme', isLight ? 'light' : 'dark');
+}
+
+// Apply saved theme on load
+(function() {
+  const saved = localStorage.getItem('weGoldTheme');
+  if (saved === 'light') {
+    document.body.classList.add('light-mode');
+    document.addEventListener('DOMContentLoaded', function() {
+      const btn = document.getElementById('themeToggle');
+      if (btn) btn.textContent = '☀️ نهار';
+    });
+  }
+})();
+
+// ============================
+// INIT
+// ============================
+renderGroupsForDay(1);
+renderGroupsForDay(16);
+renderSummary();
+renderHeaderStats();
+checkAndAutoSend();
+
+// ============================
+// PWA - Service Worker
+// ============================
+// ============================
+// INLINE MANIFEST
+// ============================
+(function() {
+  const manifest = {
+    name: 'WE Gold 2026',
+    short_name: 'WE Gold',
+    description: 'إدارة مجموعات WE Gold 2026',
+    start_url: '.',
+    display: 'standalone',
+    background_color: '#0a0a14',
+    theme_color: '#FFD700',
+    lang: 'ar',
+    dir: 'rtl',
+    orientation: 'portrait',
+    icons: [
+      { src: 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 192 192%22><rect width=%22192%22 height=%22192%22 fill=%22%230a0a14%22/><text y=%22140%22 font-size=%22140%22 text-anchor=%22middle%22 x=%2296%22>⚡</text></svg>', sizes: '192x192', type: 'image/svg+xml' },
+      { src: 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 512 512%22><rect width=%22512%22 height=%22512%22 fill=%22%230a0a14%22/><text y=%22380%22 font-size=%22380%22 text-anchor=%22middle%22 x=%22256%22>⚡</text></svg>', sizes: '512x512', type: 'image/svg+xml' }
+    ]
+  };
+  const blob = new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' });
+  const url  = URL.createObjectURL(blob);
+  const link = document.createElement('link');
+  link.rel   = 'manifest';
+  link.href  = url;
+  document.head.appendChild(link);
+})();
+
+// ============================
+// SERVICE WORKER
+// ============================
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js')
+    .then(reg => console.log('✅ SW registered', reg.scope))
+    .catch(err => console.log('SW failed:', err));
+}
+</script>
+</body>
+</html>
